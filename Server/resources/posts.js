@@ -44,17 +44,18 @@ module.exports = (app, connection, protectedRoute) => {
     const post_id = req.params.postId
     const user_id = req.params.userId
 
-    connection.query(`INSERT INTO user_likes (user_id, post_id) VALUES (?,?)`, [post_id], [user_id], (err, result) => {
-      if (err) throw err
+    connection.query(`INSERT INTO user_likes (user_id, post_id) VALUES (?, ?)`, [user_id, post_id], (err, result) => {
+      if (err) throw err;
 
       connection.query(`UPDATE posts SET likes = likes + 1 WHERE post_id = ?`, [post_id], (err, result) => {
+        if (err) throw err;
+
         return res.json({
           ok: true
-        })
-      })
+        });
+      });
+    });
 
-
-    })
   })
 
   app.get('/api/posts/likes/:userId', (req, res) => {
@@ -84,7 +85,7 @@ module.exports = (app, connection, protectedRoute) => {
     const postId = req.params.id
     const userId = req.body.userId
     const content = req.body.content
-    connection.query(`INSERT INTO comments (user_id, post_id, content) VALUES (?,?,?)`, [userId], [postId], [content], (err, result) => {
+    connection.query(`INSERT INTO comments (user_id, post_id, content) VALUES (?,?,?)`, [userId, postId, content], (err, result) => {
       if (err) throw err
       return res.json({
         ok: true

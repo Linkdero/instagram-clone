@@ -47,7 +47,7 @@ module.exports = (app, connection, protectedRoute) => {
   app.post('/api/users/register', (req, res) => {
 
     bcrypt.hash(req.body.password, 10, (err, password) => {
-      connection.query(`INSERT INTO users (username, email, password) VALUES ('${req.body.username}','${req.body.email}','${password}')`, (err, result) => {
+      connection.query(`INSERT INTO users (username, email, password) VALUES (?,?,?)` [req.body.username, req.body.email, password], (err, result) => {
         if (err) throw err
 
         var userData = {
@@ -64,12 +64,6 @@ module.exports = (app, connection, protectedRoute) => {
         })
 
       })
-    })
-  })
-
-  app.get('/api/users/profile', protectedRoute, (req, res) => {
-    res.json({
-      email: "hola@nickpashkov.com"
     })
   })
 }

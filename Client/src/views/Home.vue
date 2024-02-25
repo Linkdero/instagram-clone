@@ -2,7 +2,7 @@
   main
     div.container
       article
-        h1 Lo más <strong>nuevo</strong>.
+        h1 Lo más <strong>nuevo</strong>. 
       div.grid
         figure(v-for="post in posts" @dblclick="likePost(post)")
           img(:src="'http://localhost:4000/' + post.source")
@@ -17,7 +17,6 @@
                 span 5
     router-view
 </template>
-
 <script>
 import api from '@/api.js'
 export default {

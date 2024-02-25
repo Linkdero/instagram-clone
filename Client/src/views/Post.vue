@@ -26,7 +26,7 @@
         div.footer
           div.likes
             a(href="#")
-              i.lar.la-heart 
+              i.lar.la-heart(@click="likePost(post)")
               span {{ post.likes }} Me gusta
           form(@submit.prevent="newComment")
             input(type="text" placeholder="Escribe tu comentario..." v-model="comment.content")
