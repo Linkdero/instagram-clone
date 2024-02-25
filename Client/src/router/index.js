@@ -1,17 +1,28 @@
-import api from '@/api.js'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '../store'
-import Home from '../views/Home.vue'
+import api from '@/api.js'
+
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 
+import Home from '../views/Home.vue'
+
+import Post from '../views/Post.vue'
+
 Vue.use(VueRouter)
 
-const routes = [
-  {
+const routes = [{
     path: '/',
-    component: Home
+    component: Home,
+    children: [
+      {
+        path: 'post/:id',
+        props: true,
+        component: Post
+      }
+    ]
+
   },
   {
     path: '/login',
@@ -24,7 +35,11 @@ const routes = [
   {
     path: '/profile',
     component: () => import('../views/Profile.vue')
-  }
+  },
+  {
+    path: '/upload',
+    component: () => import('../views/Upload.vue')
+  },
 
 ]
 
@@ -35,22 +50,11 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log(to)
-  const protectedRoutes = ["/profile"]
-  protectedRoutes.forEach(path => {
-    if (to.path === path) {
-      if (!store.getters.token)
-        next('/login')
-
-      api.get('/users/profile').then(response => {
-        if (response.data.error)
-          next('/login')
-
-        next()
-      })
-    }
-  });
-  next()
+  const protectedRoutes = ["/profile", "/upload"]
+  if (protectedRoutes.includes(to.path) && !store.getters.token)
+    next('/login')
+  else
+    next()
 })
 
 export default router
